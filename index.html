@@ -1,0 +1,161 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Parking System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #f8c200;
+      --secondary: #ff7a00;
+      --accent: #ff4da6;
+      --text-dark: #1b1b1b;
+      --bg-light: #fffbea;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to bottom right, var(--primary), var(--bg-light));
+      color: var(--text-dark);
+      overflow-x: hidden;
+      text-align: center;
+    }
+
+    .hero-container {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 900px;
+      margin: 3rem auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      color: transparent;
+      font-family: 'Bungee', cursive;
+    }
+
+    .subtitle {
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      color: #444;
+    }
+
+    .start-btn {
+      background: linear-gradient(45deg, var(--secondary), var(--accent));
+      color: white;
+      font-size: 1.2rem;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      border: none;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+
+    .start-btn:hover {
+      background: linear-gradient(45deg, var(--accent), var(--secondary));
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .feature {
+      background: #fff8dc;
+      border: 1px solid #ffe799;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 180px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-8px);
+      border-color: var(--secondary);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+    }
+
+    .feature-text {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    footer {
+      background-color: #ffe680;
+      color: #333;
+      padding: 1rem 0;
+      font-size: 0.95rem;
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.4rem;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+      }
+
+      .feature {
+        width: 140px;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="d-flex justify-content-center align-items-center min-vh-100 p-3">
+    <div class="hero-container">
+      <h1>SMART PARKING SYSTEM</h1>
+      <p class="subtitle">Experience a new era of efficient parking with our real-time solution designed to save time and reduce congestion.</p>
+      <a href="smart-parking.html" class="start-btn">GET STARTED</a>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⏱️</div>
+          <div class="feature-text">Real-time Availability</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💳</div>
+          <div class="feature-text">Cashless Payments</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📱</div>
+          <div class="feature-text">Mobile Integration</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-text">Easy Navigation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Smart Parking System - MINI PROJECT. All rights reserved.
+  </footer>
+
+</body>
+</html>
