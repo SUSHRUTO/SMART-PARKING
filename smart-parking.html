@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -149,7 +149,7 @@
           <option value="30">30 mins - ₹5</option>
           <option value="60">1 hr - ₹10</option>
           <option value="120">2 hr - ₹20</option>
-          <option value="121">> 2 hr - ₹40</option>
+          <option value="180">3 hr - ₹30</option>
         </select>
       </div>
       <button type="submit" class="btn btn-custom w-100">Park Car</button>
@@ -288,9 +288,9 @@
       } else if (duration === 120) {
         fee = 20;
         feeDuration = '2 hrs';
-      } else if (duration > 120) {
-        fee = 40;
-        feeDuration = 'more than 2 hrs';
+      } else if (duration === 180) {
+        fee = 30;
+        feeDuration = '3 hrs';
       }
 
       try {
@@ -370,4 +370,3 @@
   </script>
 </body>
 </html>
-
