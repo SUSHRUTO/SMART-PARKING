@@ -47,12 +47,12 @@
       border-radius: 50%;
       background: #4361ee;
       color: white;
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       font-weight: bold;
-      width: 50px;
-      height: 50px;
+      width: 30px;
+      height: 30px;
       text-align: center;
-      line-height: 50px;
+      line-height: 30px;
       cursor: pointer;
       transition: all 0.3s;
     }
@@ -143,6 +143,15 @@
         <label for="carModel" class="form-label">Car Model</label>
         <input type="text" id="carModel" class="form-control" required />
       </div>
+      <div class="mb-3">
+        <label for="parkingDuration" class="form-label">Select Parking Duration</label>
+        <select id="parkingDuration" class="form-control" required>
+          <option value="30">30 mins - ₹5</option>
+          <option value="60">1 hr - ₹10</option>
+          <option value="120">2 hr - ₹20</option>
+          <option value="121">> 2 hr - ₹40</option>
+        </select>
+      </div>
       <button type="submit" class="btn btn-custom w-100">Park Car</button>
     </form>
 
@@ -175,7 +184,7 @@
 
   <div id="adminDashboard" class="position-fixed top-0 end-0 p-3 d-none" style="max-width: 400px;">
     <div class="dashboard-panel">
-      <h4 class="text-center mb-3">👨‍💼 Car Details </h4>
+      <h4 class="text-center mb-3">👨‍💼 Car Details</h4>
       <div id="dashboardContent">Loading data...</div>
     </div>
   </div>
@@ -235,7 +244,6 @@
       slotCount.textContent = count;
       carsLeft.textContent = availableSlots;
 
-      // Update slot visualization
       let slotsHTML = '';
       for (let i = 1; i <= 5; i++) {
         const isTaken = cars[`car${i}`] !== undefined && cars[`car${i}`] !== null;
@@ -246,7 +254,20 @@
       let dashboardHTML = "";
       for (const [key, car] of Object.entries(cars)) {
         if (car) {
-          dashboardHTML += `<p><strong>${key}</strong> - ${car.license} (${car.model})</p>`;
+          const entryTimeFormatted = new Date(car.entryTime).toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+          });
+          dashboardHTML += 
+            `<p><strong>${key}</strong> - ${car.license} (${car.model})<br>
+            ⏰ Entry Time: ${entryTimeFormatted}<br>
+            💰 Fee: ₹${car.estimatedFee || 0}
+            ${car.penalty ? `<br>⚠️ Penalty: ₹${car.penalty}` : ""}</p>`;
         }
       }
       dashboardContent.innerHTML = dashboardHTML || "No cars parked.";
@@ -257,6 +278,20 @@
 
       const license = document.getElementById("licenseNumber").value.trim();
       const model = document.getElementById("carModel").value.trim();
+      const duration = parseInt(document.getElementById("parkingDuration").value);
+      let fee = 5;
+      let feeDuration = '30 mins';
+
+      if (duration === 60) {
+        fee = 10;
+        feeDuration = '1 hr';
+      } else if (duration === 120) {
+        fee = 20;
+        feeDuration = '2 hrs';
+      } else if (duration > 120) {
+        fee = 40;
+        feeDuration = 'more than 2 hrs';
+      }
 
       try {
         const snapshot = await get(carsRef);
@@ -283,8 +318,6 @@
         }
 
         const entryTime = new Date().toISOString();
-        const duration = 30;
-        const fee = 50;
 
         const carData = {
           slot: newCarId,
@@ -312,7 +345,7 @@
           year: "numeric"
         });
 
-        receiptText.textContent = `🧾 Parking Receipt: Your vehicle with License Number ${license} and Car Model ${model} has been successfully parked in Slot ${newCarId} at ${formattedTime}. The estimated parking duration is ${duration} minutes, and the fee is ₹${fee}.`;
+        receiptText.textContent = `🧾 Parking Receipt: Your vehicle with License Number ${license} and Car Model ${model} has been successfully parked in Slot ${newCarId} at ${formattedTime}. The estimated parking duration is ${feeDuration}, and the fee is ₹${fee}.`;
         receiptContainer.classList.remove("d-none");
 
         entryForm.reset();
@@ -337,3 +370,4 @@
   </script>
 </body>
 </html>
+
