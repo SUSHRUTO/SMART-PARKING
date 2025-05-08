@@ -1,372 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Parking Entry</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap');
-
-    body {
-      background-color: #f0f5ff;
-      color: #333;
-      font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
-    }
-    .container {
-      max-width: 600px;
-    }
-    .dashboard-panel {
-      background-color: #ffffff;
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 0 20px rgba(100, 149, 237, 0.4);
-      color: #4361ee;
-      border: 2px solid #4361ee;
-    }
-    .btn-custom {
-      background-color: #4361ee;
-      color: white;
-      font-weight: bold;
-      border-radius: 50px;
-      border: none;
-      transition: all 0.3s;
-    }
-    .btn-custom:hover {
-      background-color: #3a56d4;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
-    }
-    .admin-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 999;
-      border-radius: 50%;
-      background: #4361ee;
-      color: white;
-      font-size: 0.9rem;
-      font-weight: bold;
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 30px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .admin-btn:hover {
-      transform: rotate(15deg);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
-    }
-    .clock {
-      text-align: center;
-      font-size: 1.5rem;
-      color: #4361ee;
-      margin-top: 1rem;
-      font-family: 'Orbitron', sans-serif;
-      text-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
-    }
-    canvas {
-      border: 2px dashed #4361ee;
-      padding: 10px;
-      background-color: white;
-      border-radius: 10px;
-    }
-    .receipt-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background-color: white;
-      color: #4361ee;
-      border: 2px solid #4361ee;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
-    }
-    .form-control {
-      border: 2px solid #4361ee;
-      border-radius: 10px;
-      padding: 10px 15px;
-    }
-    .form-control:focus {
-      border-color: #3a56d4;
-      box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-    }
-    h2, h5 {
-      color: #4361ee;
-    }
-    #carEntryForm, #deleteForm {
-      background-color: white;
-      border: 2px solid #4361ee;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
-    }
-    .btn-danger {
-      background-color: #f72585;
-      border: none;
-      transition: all 0.3s;
-    }
-    .btn-danger:hover {
-      background-color: #d91a73;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
-    }
-    .slot-indicator {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin-right: 5px;
-    }
-    .slot-available {
-      background-color: #4cc9f0;
-    }
-    .slot-taken {
-      background-color: #f72585;
-    }
-  </style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Smart Parking Entry</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap');
+        body {
+            background-color: #f0f5ff;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 600px;
+        }
+        .dashboard-panel {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(100,149,237,0.4);
+            color: #4361ee;
+            border: 2px solid #4361ee;
+        }
+        .btn-custom {
+            background-color: #4361ee;
+            color: white;
+            font-weight: bold;
+            border-radius: 50px;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67,97,238,0.4);
+        }
+        .admin-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            border-radius: 50%;
+            background: #4361ee;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .admin-btn:hover {
+            transform: rotate(15deg);
+            box-shadow: 0 5px 15px rgba(67,97,238,0.4);
+        }
+        .clock {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #4361ee;
+            margin-top: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px rgba(67,97,238,0.3);
+        }
+        canvas {
+            border: 2px dashed #4361ee;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+        }
+        .receipt-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: white;
+            color: #4361ee;
+            border: 2px solid #4361ee;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(67,97,238,0.1);
+        }
+        .form-control {
+            border: 2px solid #4361ee;
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+        .form-control:focus {
+            border-color: #3a56d4;
+            box-shadow: 0 0 0 0.25rem rgba(67,97,238,0.25);
+        }
+        h2, h5 {
+            color: #4361ee;
+        }
+        #carEntryForm, #deleteForm {
+            background-color: white;
+            border: 2px solid #4361ee;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(67,97,238,0.1);
+        }
+        .btn-danger {
+            background-color: #f72585;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-danger:hover {
+            background-color: #d91a73;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247,37,133,0.4);
+        }
+        .slot-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .slot-available {
+            background-color: #4cc9f0;
+        }
+        .slot-taken {
+            background-color: #f72585;
+        }
+    </style>
 </head>
 <body>
-  <div class="admin-btn" id="adminToggle">i</div>
-
-  <div class="clock" id="clock"></div>
-
-  <div class="container py-5">
-    <h2 class="text-center mb-4">🚗 Smart Parking Entry</h2>
-
-    <form id="carEntryForm" class="border p-4 rounded shadow-sm">
-      <div class="mb-3">
-        <label for="licenseNumber" class="form-label">License Number</label>
-        <input type="text" id="licenseNumber" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label for="carModel" class="form-label">Car Model</label>
-        <input type="text" id="carModel" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label for="parkingDuration" class="form-label">Select Parking Duration</label>
-        <select id="parkingDuration" class="form-control" required>
-          <option value="30">30 mins - ₹5</option>
-          <option value="60">1 hr - ₹10</option>
-          <option value="120">2 hr - ₹20</option>
-          <option value="180">3 hr - ₹30</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-custom w-100">Park Car</button>
-    </form>
-
-    <div id="qrContainer" class="mt-4 text-center d-none">
-      <h5>🎟️ Ticket QR Code</h5>
-      <canvas id="qrcode"></canvas>
+    <div class="admin-btn" id="adminToggle">i</div>
+    <div class="clock" id="clock"></div>
+    <div class="container py-5">
+        <h2 class="text-center mb-4">🚗 Smart Parking Entry</h2>
+        <form id="carEntryForm" class="border p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="licenseNumber" class="form-label">License Number</label>
+                <input type="text" id="licenseNumber" class="form-control" required/>
+            </div>
+            <div class="mb-3">
+                <label for="carModel" class="form-label">Car Model</label>
+                <input type="text" id="carModel" class="form-control" required/>
+            </div>
+            <div class="mb-3">
+                <label for="parkingDuration" class="form-label">Select Parking Duration</label>
+                <select id="parkingDuration" class="form-control" required>
+                    <option value="30">30 mins - ₹5</option>
+                    <option value="60">1 hr - ₹10</option>
+                    <option value="120">2 hr - ₹20</option>
+                    <option value="180">3 hr - ₹30</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-custom w-100">Park Car</button>
+        </form>
+        <div id="qrContainer" class="mt-4 text-center d-none">
+            <h5>🎟️ Ticket QR Code</h5>
+            <canvas id="qrcode"></canvas>
+        </div>
+        <div id="receiptContainer" class="receipt-box d-none">
+            <h5>🧾 Parking Receipt</h5>
+            <p id="receiptText"></p>
+        </div>
+        <div class="text-center mt-4">
+            <h5>📊 Live Slot Availability: <span id="slotCount">Loading...</span>/5</h5>
+            <div id="slotVisual" class="my-3"></div>
+            <h5>🅿️ Available Slots: <span id="carsLeft">Loading...</span></h5>
+        </div>
+        <hr class="my-4"/>
+        <form id="deleteForm" class="border p-3 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="deleteId" class="form-label">Enter Car Slot ID to Delete (e.g., car1)</label>
+                <input type="text" id="deleteId" class="form-control" required/>
+            </div>
+            <button type="submit" class="btn btn-danger w-100">Delete Car</button>
+        </form>
     </div>
-
-    <div id="receiptContainer" class="receipt-box d-none">
-      <h5>🧾 Parking Receipt</h5>
-      <p id="receiptText"></p>
+    <div id="adminDashboard" class="position-fixed top-0 end-0 p-3 d-none" style="max-width: 400px;">
+        <div class="dashboard-panel">
+            <h4 class="text-center mb-3">👨‍💼 Car Details</h4>
+            <div id="dashboardContent">Loading data...</div>
+        </div>
     </div>
-
-    <div class="text-center mt-4">
-      <h5>📊 Live Slot Availability: <span id="slotCount">Loading...</span>/5</h5>
-      <div id="slotVisual" class="my-3"></div>
-      <h5>🅿️ Available Slots: <span id="carsLeft">Loading...</span></h5>
-    </div>
-
-    <hr class="my-4" />
-
-    <form id="deleteForm" class="border p-3 rounded shadow-sm">
-      <div class="mb-3">
-        <label for="deleteId" class="form-label">Enter Car Slot ID to Delete (e.g., car1)</label>
-        <input type="text" id="deleteId" class="form-control" required />
-      </div>
-      <button type="submit" class="btn btn-danger w-100">Delete Car</button>
-    </form>
-  </div>
-
-  <div id="adminDashboard" class="position-fixed top-0 end-0 p-3 d-none" style="max-width: 400px;">
-    <div class="dashboard-panel">
-      <h4 class="text-center mb-3">👨‍💼 Car Details</h4>
-      <div id="dashboardContent">Loading data...</div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import {
-      getDatabase,
-      ref,
-      get,
-      set,
-      remove,
-      onValue
-    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD4JfiBZWRpWsnQzBn-qp5CmiKhtzMIO40",
-      authDomain: "smartparking001.firebaseapp.com",
-      databaseURL: "https://smartparking001-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "smartparking001",
-      storageBucket: "smartparking001.appspot.com",
-      messagingSenderId: "134317403275",
-      appId: "1:134317403275:web:4da38b3d8934d261cef88e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const entryForm = document.getElementById("carEntryForm");
-    const deleteForm = document.getElementById("deleteForm");
-    const qrContainer = document.getElementById("qrContainer");
-    const qrCanvas = document.getElementById("qrcode");
-    const slotCount = document.getElementById("slotCount");
-    const carsLeft = document.getElementById("carsLeft");
-    const dashboardContent = document.getElementById("dashboardContent");
-    const adminToggle = document.getElementById("adminToggle");
-    const adminDashboard = document.getElementById("adminDashboard");
-    const receiptText = document.getElementById("receiptText");
-    const receiptContainer = document.getElementById("receiptContainer");
-    const slotVisual = document.getElementById("slotVisual");
-
-    setInterval(() => {
-      const now = new Date();
-      document.getElementById("clock").textContent = now.toLocaleTimeString();
-    }, 1000);
-
-    adminToggle.addEventListener("click", () => {
-      adminDashboard.classList.toggle("d-none");
-    });
-
-    const carsRef = ref(db, "parkingSystem/cars");
-    onValue(carsRef, (snapshot) => {
-      const cars = snapshot.exists() ? snapshot.val() : {};
-      const count = Object.values(cars).filter(c => c !== null).length;
-      const availableSlots = 5 - count;
-
-      slotCount.textContent = count;
-      carsLeft.textContent = availableSlots;
-
-      let slotsHTML = '';
-      for (let i = 1; i <= 5; i++) {
-        const isTaken = cars[`car${i}`] !== undefined && cars[`car${i}`] !== null;
-        slotsHTML += `<span class="slot-indicator ${isTaken ? 'slot-taken' : 'slot-available'}" title="Slot ${i}"></span>`;
-      }
-      slotVisual.innerHTML = slotsHTML;
-
-      let dashboardHTML = "";
-      for (const [key, car] of Object.entries(cars)) {
-        if (car) {
-          const entryTimeFormatted = new Date(car.entryTime).toLocaleString("en-IN", {
-            timeZone: "Asia/Kolkata",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-          });
-          dashboardHTML += 
-            `<p><strong>${key}</strong> - ${car.license} (${car.model})<br>
-            ⏰ Entry Time: ${entryTimeFormatted}<br>
-            💰 Fee: ₹${car.estimatedFee || 0}
-            ${car.penalty ? `<br>⚠️ Penalty: ₹${car.penalty}` : ""}</p>`;
-        }
-      }
-      dashboardContent.innerHTML = dashboardHTML || "No cars parked.";
-    });
-
-    entryForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const license = document.getElementById("licenseNumber").value.trim();
-      const model = document.getElementById("carModel").value.trim();
-      const duration = parseInt(document.getElementById("parkingDuration").value);
-      let fee = 5;
-      let feeDuration = '30 mins';
-
-      if (duration === 60) {
-        fee = 10;
-        feeDuration = '1 hr';
-      } else if (duration === 120) {
-        fee = 20;
-        feeDuration = '2 hrs';
-      } else if (duration === 180) {
-        fee = 30;
-        feeDuration = '3 hrs';
-      }
-
-      try {
-        const snapshot = await get(carsRef);
-        const existingCars = snapshot.exists() ? snapshot.val() : {};
-        const carCount = Object.values(existingCars).filter(car => car !== null).length;
-
-        if (carCount >= 5) {
-          alert("🚫 Parking is full (Max 5 cars allowed).");
-          return;
-        }
-
-        let newCarId = null;
-        for (let i = 1; i <= 5; i++) {
-          const slot = `car${i}`;
-          if (!existingCars[slot]) {
-            newCarId = slot;
-            break;
-          }
-        }
-
-        if (!newCarId) {
-          alert("🚫 No available slots.");
-          return;
-        }
-
-        const entryTime = new Date().toISOString();
-
-        const carData = {
-          slot: newCarId,
-          license,
-          model,
-          entryTime,
-          estimatedTimeMinutes: duration,
-          estimatedFee: fee
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getDatabase, ref, get, set, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4JfiBZWRpWsnQzBn-qp5CmiKhtzMIO40",
+            authDomain: "smartparking001.firebaseapp.com",
+            databaseURL: "https://smartparking001-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smartparking001",
+            storageBucket: "smartparking001.appspot.com",
+            messagingSenderId: "134317403275",
+            appId: "1:134317403275:web:4da38b3d8934d261cef88e"
         };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const entryForm = document.getElementById("carEntryForm");
+        const deleteForm = document.getElementById("deleteForm");
+        const qrContainer = document.getElementById("qrContainer");
+        const qrCanvas = document.getElementById("qrcode");
+        const slotCount = document.getElementById("slotCount");
+        const carsLeft = document.getElementById("carsLeft");
+        const dashboardContent = document.getElementById("dashboardContent");
+        const adminToggle = document.getElementById("adminToggle");
+        const adminDashboard = document.getElementById("adminDashboard");
+        const receiptText = document.getElementById("receiptText");
+        const receiptContainer = document.getElementById("receiptContainer");
+        const slotVisual = document.getElementById("slotVisual");
 
-        await set(ref(db, `parkingSystem/cars/${newCarId}`), carData);
-        alert(`✅ Car parked successfully at ${newCarId}`);
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById("clock").textContent = now.toLocaleTimeString();
+        }, 1000);
 
-        const qrText = `Slot: ${newCarId}\nLicense: ${license}\nModel: ${model}\nTime: ${entryTime}\nFee: ₹${fee}`;
-        qrContainer.classList.remove("d-none");
-        QRCode.toCanvas(qrCanvas, qrText);
-
-        const formattedTime = new Date(entryTime).toLocaleString("en-IN", {
-          timeZone: "Asia/Kolkata",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          day: "2-digit",
-          month: "long",
-          year: "numeric"
+        adminToggle.addEventListener("click", () => {
+            adminDashboard.classList.toggle("d-none");
         });
 
-        receiptText.textContent = `🧾 Parking Receipt: Your vehicle with License Number ${license} and Car Model ${model} has been successfully parked in Slot ${newCarId} at ${formattedTime}. The estimated parking duration is ${feeDuration}, and the fee is ₹${fee}.`;
-        receiptContainer.classList.remove("d-none");
+        const carsRef = ref(db, "parkingSystem/cars");
+        onValue(carsRef, (snapshot) => {
+            const cars = snapshot.exists() ? snapshot.val() : {};
+            const count = Object.values(cars).filter(c => c !== null).length;
+            const availableSlots = 5 - count;
+            slotCount.textContent = count;
+            carsLeft.textContent = availableSlots;
+            let slotsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const isTaken = cars[`car${i}`] !== undefined && cars[`car${i}`] !== null;
+                slotsHTML += `<span class="slot-indicator ${isTaken ? 'slot-taken' : 'slot-available'}" title="Slot ${i}"></span>`;
+            }
+            slotVisual.innerHTML = slotsHTML;
 
-        entryForm.reset();
-      } catch (err) {
-        console.error(err);
-        alert("❌ Error parking the car.");
-      }
-    });
+            let dashboardHTML = "";
+            for (const [key, car] of Object.entries(cars)) {
+                if (car) {
+                    const entryTimeFormatted = new Date(car.entryTime).toLocaleString("en-IN", {timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: true, day: "2-digit", month: "short", year: "numeric"});
+                    const currentTime = new Date();
+                    const elapsedTime = Math.floor((currentTime - new Date(car.entryTime)) / 60000);
+                    let updatedFee = car.estimatedFee + (elapsedTime * 0.166); // Update fee based on elapsed time
+                    updatedFee = Math.round(updatedFee); // Round to the nearest whole number
+                    let penalty = 0;
+                    if (elapsedTime > car.estimatedTimeMinutes) {
+                        penalty = 50;
+                    }
+                    updatedFee += penalty;
+                    dashboardHTML += `<p><strong>${key}</strong> - ${car.license} (${car.model})<br>⏰ Entry Time: ${entryTimeFormatted}<br>💰 Fee: ₹${updatedFee}${penalty ? `<br>⚠️ Penalty: ₹${penalty}` : ""}</p>`;
+                }
+            }
+            dashboardContent.innerHTML = dashboardHTML || "No cars parked.";
+        });
 
-    deleteForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const carId = document.getElementById("deleteId").value.trim();
-      try {
-        await remove(ref(db, `parkingSystem/cars/${carId}`));
-        alert(`🗑️ ${carId} removed from database.`);
-        deleteForm.reset();
-      } catch (err) {
-        console.error(err);
-        alert("❌ Error deleting car.");
-      }
-    });
-  </script>
+        entryForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const license = document.getElementById("licenseNumber").value.trim();
+            const model = document.getElementById("carModel").value.trim();
+            const duration = parseInt(document.getElementById("parkingDuration").value);
+            let fee = 5;
+            let feeDuration = '30 mins';
+            if (duration === 60) {
+                fee = 10;
+                feeDuration = '1 hr';
+            } else if (duration === 120) {
+                fee = 20;
+                feeDuration = '2 hrs';
+            } else if (duration === 180) {
+                fee = 30;
+                feeDuration = '3 hrs';
+            }
+            fee = Math.round(fee); // Round the fee to the nearest whole number
+            try {
+                const snapshot = await get(carsRef);
+                const existingCars = snapshot.exists() ? snapshot.val() : {};
+                const carCount = Object.values(existingCars).filter(car => car !== null).length;
+                if (carCount >= 5) {
+                    alert("🚫 Parking is full (Max 5 cars allowed).");
+                    return;
+                }
+                let newCarId = null;
+                for (let i = 1; i <= 5; i++) {
+                    const slot = `car${i}`;
+                    if (!existingCars[slot]) {
+                        newCarId = slot;
+                        break;
+                    }
+                }
+                const entryTime = new Date().toISOString();
+                const newCarData = { license, model, estimatedTimeMinutes: duration, entryTime, estimatedFee: fee };
+                await set(ref(db, `parkingSystem/cars/${newCarId}`), newCarData);
+                alert("🅿️ Car parked successfully!");
+                qrContainer.classList.remove("d-none");
+                QRCode.toCanvas(qrCanvas, `Parking Slot: ${newCarId}, License: ${license}`, (err) => {
+                    if (err) console.error(err);
+                });
+                receiptText.innerHTML = `
+                    License: ${license}<br>
+                    Model: ${model}<br>
+                    Duration: ${feeDuration}<br>
+                    Fee: ₹${fee}<br>
+                    Slot: ${newCarId}`;
+                receiptContainer.classList.remove("d-none");
+            } catch (error) {
+                console.error(error);
+                alert("❌ Error occurred while parking the car.");
+            }
+        });
+
+        deleteForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const deleteId = document.getElementById("deleteId").value.trim();
+            try {
+                await remove(ref(db, `parkingSystem/cars/${deleteId}`));
+                alert(`✅ ${deleteId} deleted successfully.`);
+            } catch (error) {
+                console.error(error);
+                alert("❌ Error occurred while deleting the car.");
+            }
+        });
+    </script>
 </body>
 </html>
