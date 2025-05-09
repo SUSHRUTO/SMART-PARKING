@@ -154,6 +154,10 @@
           <option value="180">3 hr - ₹30</option>
         </select>
       </div>
+      <div class="mb-3">
+        <label for="preferredSlot" class="form-label">Preferred Slot (Optional)</label>
+        <input type="text" id="preferredSlot" class="form-control" placeholder="Enter Slot (e.g., car1)"/>
+      </div>
       <button type="submit" class="btn btn-custom w-100">Park Car</button>
     </form>
 
@@ -264,8 +268,9 @@
           });
           const currentTime = new Date();
           const elapsedTime = Math.floor((currentTime - new Date(car.entryTime)) / 60000);
-          let updatedFee = car.estimatedFee + (elapsedTime * 0.166);
-          updatedFee = Math.round(updatedFee);
+          let updatedFee = Math.floor(elapsedTime * (car.estimatedFee / car.estimatedTimeMinutes));
+          updatedFee = Math.max(updatedFee, 0);
+          updatedFee = Math.min(updatedFee, car.estimatedFee);
           let penalty = 0;
           if (elapsedTime > car.estimatedTimeMinutes) {
             penalty = 50;
@@ -282,47 +287,54 @@
       const license = document.getElementById("licenseNumber").value.trim();
       const model = document.getElementById("carModel").value.trim();
       const duration = parseInt(document.getElementById("parkingDuration").value);
-      let fee = 5;
-      let feeDuration = '30 mins';
-      if (duration === 60) { fee = 10; feeDuration = '1 hr'; }
-      else if (duration === 120) { fee = 20; feeDuration = '2 hrs'; }
-      else if (duration === 180) { fee = 30; feeDuration = '3 hrs'; }
+      const preferredSlot = document.getElementById("preferredSlot").value.trim();
 
-      const carKey = `car${Math.floor(Math.random() * 5) + 1}`;
-      const entryTime = new Date();
-      const newCar = {
-        license,
-        model,
-        estimatedFee: fee,
-        estimatedTimeMinutes: duration,
-        entryTime: entryTime.toISOString(),
-      };
-      await set(ref(db, `parkingSystem/cars/${carKey}`), newCar);
+      if (!license || !model || !duration) return alert("Please fill all fields.");
+        const carData = {
+    license,
+    model,
+    entryTime: Date.now(),
+    estimatedFee: duration === 30 ? 5 : duration === 60 ? 10 : duration === 120 ? 20 : 30,
+    estimatedTimeMinutes: duration,
+    preferredSlot
+  };
 
-      setTimeout(() => {
-        qrContainer.classList.remove("d-none");
-        const endTime = new Date(entryTime.getTime() + duration * 60000);
-        const qrData = `
-License Number: ${license}
-Car Model: ${model}
-Entry Time: ${entryTime.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-Estimated Duration: ${feeDuration}
-Estimated Fee: ₹${fee}
-End Time: ${endTime.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-Penalty (if overtime): ₹50
-`;
-        QRCode.toCanvas(qrCanvas, qrData);
-        receiptText.innerHTML = `🧾 Receipt:<br>License: ${license}<br>Model: ${model}<br>Fee: ₹${fee}<br>Duration: ${feeDuration}`;
-        receiptContainer.classList.remove("d-none");
-      }, 500);
-    });
+  const carKey = preferredSlot || `car${Math.floor(Math.random() * 5) + 1}`;
+  await set(ref(db, `parkingSystem/cars/${carKey}`), carData);
 
-    deleteForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const carId = document.getElementById("deleteId").value.trim();
-      await remove(ref(db, `parkingSystem/cars/${carId}`));
-      alert(`Car with ID ${carId} has been removed.`);
-    });
-  </script>
-</body>
-</html>
+  const qrData = `
+    License Number: ${license}
+    Model: ${model}
+    Parking Duration: ${duration / 60} hr
+    Entry Time: ${new Date(carData.entryTime).toLocaleString()}
+    Estimated Fee: ₹${carData.estimatedFee}
+    Slot: ${carKey}
+  `;
+
+  QRCode.toCanvas(qrCanvas, qrData, (error) => {
+    if (error) console.error(error);
+    qrContainer.classList.remove("d-none");
+  });
+
+  receiptText.innerHTML = `
+    <strong>License Number:</strong> ${license}<br>
+    <strong>Model:</strong> ${model}<br>
+    <strong>Parking Duration:</strong> ${duration / 60} hr<br>
+    <strong>Estimated Fee:</strong> ₹${carData.estimatedFee}<br>
+    <strong>Entry Time:</strong> ${new Date(carData.entryTime).toLocaleString()}<br>
+    <strong>Slot:</strong> ${carKey}
+  `;
+  receiptContainer.classList.remove("d-none");
+});
+
+deleteForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const deleteId = document.getElementById("deleteId").value.trim();
+  if (!deleteId) return alert("Please enter the slot ID to delete.");
+
+  await remove(ref(db, `parkingSystem/cars/${deleteId}`));
+  alert(`Car with slot ${deleteId} removed.`);
+});
+</script>
+</body> 
+</html> ```
