@@ -242,45 +242,51 @@
     const carsRef = ref(db, "parkingSystem/cars");
 
     onValue(carsRef, (snapshot) => {
-      const cars = snapshot.exists() ? snapshot.val() : {};
-      const count = Object.values(cars).filter(c => c !== null).length;
-      const availableSlots = 5 - count;
-      slotCount.textContent = count;
-      carsLeft.textContent = availableSlots;
-      let slotsHTML = '';
-      for (let i = 1; i <= 5; i++) {
-        const isTaken = cars[`car${i}`] !== undefined && cars[`car${i}`] !== null;
-        slotsHTML += `<span class="slot-indicator ${isTaken ? 'slot-taken' : 'slot-available'} ${isTaken ? 'blinking' : ''}" title="Slot ${i}"></span>`;
-      }
-      slotVisual.innerHTML = slotsHTML;
+  const cars = snapshot.exists() ? snapshot.val() : {};
+  const count = Object.values(cars).filter(c => c !== null).length;
+  const availableSlots = 5 - count;
+  slotCount.textContent = count;
+  carsLeft.textContent = availableSlots;
 
-      let dashboardHTML = "";
-      for (const [key, car] of Object.entries(cars)) {
-        if (car) {
-          const entryTimeFormatted = new Date(car.entryTime).toLocaleString("en-IN", {
-            timeZone: "Asia/Kolkata",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-          });
-          const currentTime = new Date();
-          const elapsedTime = Math.floor((currentTime - new Date(car.entryTime)) / 60000);
-          let updatedFee = Math.floor(elapsedTime * (car.estimatedFee / car.estimatedTimeMinutes));
-          updatedFee = Math.max(updatedFee, 0);
-          updatedFee = Math.min(updatedFee, car.estimatedFee);
-          let penalty = 0;
-          if (elapsedTime > car.estimatedTimeMinutes) {
-            penalty = 50;
-          }
-          updatedFee += penalty;
-          dashboardHTML += `<p><strong>${key}</strong> - ${car.license} (${car.model})<br>⏰ Entry Time: ${entryTimeFormatted}<br>💰 Fee: ₹${updatedFee}${penalty ? `<br>⚠️ Penalty: ₹${penalty}` : ""}</p>`;
-        }
+  let slotsHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const isTaken = cars[`car${i}`] !== undefined && cars[`car${i}`] !== null;
+    slotsHTML += `<span class="slot-indicator ${isTaken ? 'slot-taken' : 'slot-available'} ${isTaken ? 'blinking' : ''}" title="Slot ${i}"></span>`;
+  }
+  slotVisual.innerHTML = slotsHTML;
+
+  let dashboardHTML = "";
+  for (const [key, car] of Object.entries(cars)) {
+    if (car) {
+      const entryTimeFormatted = new Date(car.entryTime).toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+
+      const currentTime = new Date();
+      const elapsedTime = Math.floor((currentTime - new Date(car.entryTime)) / 60000); // in minutes
+      const ratePerMinute = car.estimatedFee / car.estimatedTimeMinutes;
+      let updatedFee = Math.floor(elapsedTime * ratePerMinute);
+      updatedFee = Math.max(updatedFee, 0);
+
+      let penalty = 0;
+      if (elapsedTime > car.estimatedTimeMinutes) {
+        penalty = 50;
       }
-      dashboardContent.innerHTML = dashboardHTML || "No cars parked.";
-    });
+
+      const totalFee = updatedFee + penalty;
+
+      dashboardHTML += `<p><strong>${key}</strong> - ${car.license} (${car.model})<br>⏰ Entry Time: ${entryTimeFormatted}<br>💰 Fee: ₹${totalFee}${penalty ? `<br>⚠️ Penalty: ₹${penalty}` : ""}</p>`;
+    }
+  }
+  dashboardContent.innerHTML = dashboardHTML || "No cars parked.";
+});
+
 
     entryForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -337,4 +343,4 @@ deleteForm.addEventListener("submit", async (e) => {
 });
 </script>
 </body> 
-</html> ```
+</html>
